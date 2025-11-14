@@ -5,6 +5,7 @@ import useForm from "../hooks/useForm"
 export default function TasksPage() {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   const { form, handleChange, resetForm, setForm } = useForm({
     title: "",
@@ -31,6 +32,33 @@ export default function TasksPage() {
     }
     fetchTasks()
   }, [])
+
+  const createTask = async () => {
+    if (form.title.trim() === "" || form.description.trim() === "") {
+      return
+    }
+
+    setSaving(true)
+
+    try {
+      const res = await fetch("http://localhost:3000/api/tasks", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      })
+
+      if (res.ok) {
+        const newTask = await res.json()
+        setTasks([...tasks, newTask])
+        resetForm()
+      }
+    } catch {}
+
+    setSaving(false)
+  }
 
   if (loading) return <Loading />
 
@@ -71,11 +99,15 @@ export default function TasksPage() {
           Completada
         </label>
 
-        <button className="w-full bg-gray-900 text-white py-2 rounded">
-          Guardar Tarea
+        <button
+          className="w-full bg-gray-900 text-white py-2 rounded"
+          onClick={createTask}
+          disabled={saving}
+        >
+          {saving ? "Guardando..." : "Guardar Tarea"}
         </button>
 
-        <button 
+        <button
           className="w-full bg-gray-500 text-white py-2 rounded mt-3"
           onClick={resetForm}
         >
@@ -89,7 +121,7 @@ export default function TasksPage() {
         ) : (
           <ul className="flex flex-col gap-3">
             {tasks.map((t) => (
-              <li 
+              <li
                 key={t.id}
                 className="border p-4 bg-white shadow rounded flex justify-between items-center"
               >
