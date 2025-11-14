@@ -62,79 +62,78 @@ export default function RegisterPage() {
   if (loading) return <Loading />
 
   return (
-    <div className="w-full flex justify-center mt-20">
-      <form 
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow w-96 border"
-      >
-        <h2 className="text-2xl font-semibold mb-4">Registrarse</h2>
+    <div className="w-full min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <form 
+          onSubmit={handleSubmit}
+          className="bg-zinc-900 border border-zinc-800 p-8 rounded-lg shadow-lg"
+        >
+          <h2 className="text-3xl font-bold mb-6 text-center text-white">Crear cuenta</h2>
 
-        {error && (
-          <p className="text-red-600 mb-3">{error}</p>
-        )}
+          {error && (
+            <p className="bg-red-500/20 text-red-400 p-3 rounded-md mb-4 text-center">{error}</p>
+          )}
 
-        <input 
-          type="text"
-          name="username"
-          placeholder="Usuario"
-          value={form.username}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3"
-        />
+          <div className="space-y-4">
+            <input 
+              type="text"
+              name="username"
+              placeholder="Usuario"
+              value={form.username}
+              onChange={handleChange}
+              className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <input 
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <input 
+              type="password"
+              name="password"
+              placeholder="Contraseña"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <input 
+              type="text"
+              name="firstname"
+              placeholder="Nombre"
+              value={form.firstname}
+              onChange={handleChange}
+              className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <input 
+              type="text"
+              name="lastname"
+              placeholder="Apellido"
+              value={form.lastname}
+              onChange={handleChange}
+              className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <input 
+              type="text"
+              name="dni"
+              placeholder="DNI"
+              value={form.dni}
+              onChange={handleChange}
+              className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
 
-        <input 
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3"
-        />
+          <button className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors duration-300">
+            Registrarme
+          </button>
 
-        <input 
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={form.password}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3"
-        />
-
-        <input 
-          type="text"
-          name="firstname"
-          placeholder="Nombre"
-          value={form.firstname}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3"
-        />
-
-        <input 
-          type="text"
-          name="lastname"
-          placeholder="Apellido"
-          value={form.lastname}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3"
-        />
-
-        <input 
-          type="text"
-          name="dni"
-          placeholder="DNI"
-          value={form.dni}
-          onChange={handleChange}
-          className="border p-2 w-full mb-3"
-        />
-
-        <button className="w-full bg-gray-900 text-white py-2 rounded">
-          Registrarme
-        </button>
-
-        <p className="mt-4 text-center text-sm">
-          ¿Ya tienes cuenta? <Link to="/login" className="text-blue-600">Inicia sesión</Link>
-        </p>
-      </form>
+          <p className="mt-6 text-center text-sm text-zinc-400">
+            ¿Ya tienes cuenta? <Link to="/login" className="text-indigo-400 hover:underline">Inicia sesión</Link>
+          </p>
+        </form>
+      </div>
     </div>
   )
 }

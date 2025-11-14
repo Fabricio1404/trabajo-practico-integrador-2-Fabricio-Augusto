@@ -39,36 +39,41 @@ export default function HomePage() {
   const pendientes = total - completadas
 
   return (
-    <div className="w-full flex flex-col items-center mt-10">
-      <h1 className="text-3xl font-semibold mb-6">
-        Bienvenido, {user ? user.name : ""}
-      </h1>
+    <main className="w-full max-w-6xl mx-auto px-4 py-10 flex-grow flex flex-col justify-center text-center">
+      <div className="mb-12">
+        <h1 className="text-4xl font-bold text-white">
+          Bienvenido, <span className="text-indigo-400">{user ? user.firstname : ""}</span>
+        </h1>
+        <p className="text-lg text-zinc-400 mt-2">Aquí tienes un resumen de tu actividad.</p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-white">
 
-        <div className="bg-white border shadow p-6 rounded text-center">
-          <h2 className="text-xl font-semibold">Total de tareas</h2>
-          <p className="text-4xl mt-2">{total}</p>
+        <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 hover:border-indigo-500/50 transition-colors group">
+          <h2 className="text-lg font-semibold text-zinc-300">Total de tareas</h2>
+          <p className="text-5xl font-bold mt-2 text-indigo-400">{total}</p>
         </div>
 
-        <div className="bg-white border shadow p-6 rounded text-center">
-          <h2 className="text-xl font-semibold">Completadas</h2>
-          <p className="text-4xl mt-2">{completadas}</p>
+        <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 hover:border-green-500/50 transition-colors group">
+          <h2 className="text-lg font-semibold text-zinc-300">Completadas</h2>
+          <p className="text-5xl font-bold mt-2 text-green-400">{completadas}</p>
         </div>
 
-        <div className="bg-white border shadow p-6 rounded text-center">
-          <h2 className="text-xl font-semibold">Pendientes</h2>
-          <p className="text-4xl mt-2">{pendientes}</p>
+        <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 hover:border-yellow-500/50 transition-colors group">
+          <h2 className="text-lg font-semibold text-zinc-300">Pendientes</h2>
+          <p className="text-5xl font-bold mt-2 text-yellow-400">{pendientes}</p>
         </div>
 
       </div>
 
-      <button
-        onClick={() => window.location.href = "/tasks"}
-        className="bg-gray-900 text-white px-6 py-3 rounded mt-10"
-      >
-        Ir a mis tareas
-      </button>
-    </div>
+      <div className="text-center mt-12">
+        <button
+          onClick={() => window.location.href = "/tasks"}
+          className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-600/20"
+        >
+          Gestionar mis tareas
+        </button>
+      </div>
+    </main>
   )
 }

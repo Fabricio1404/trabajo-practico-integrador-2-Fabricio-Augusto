@@ -37,17 +37,31 @@ export default function ProfilePage() {
   if (loading) return <Loading />
 
   return (
-    <div className="w-full flex justify-center mt-10">
-      <div className="bg-white shadow-lg p-6 rounded w-96 border">
-        <h2 className="text-2xl font-semibold mb-4">Perfil del Usuario</h2>
+    <div className="w-full max-w-2xl mx-auto px-4 py-10 flex-grow flex flex-col justify-center">
+      <div className="bg-zinc-900 border border-zinc-800 shadow-lg p-8 rounded-lg text-white text-center">
+        <h2 className="text-3xl font-bold mb-6">Perfil del Usuario</h2>
 
-        <p><strong>ID:</strong> {user.id}</p>
-        <p><strong>Nombre:</strong> {user.firstname}</p>
-        <p><strong>Apellido:</strong> {user.lastname}</p>
-        <p><strong>Email:</strong> {user.email}</p>
+        <div className="space-y-4 text-lg text-left">
+          <div className="flex border-b border-zinc-800 py-2">
+            <strong className="w-32 text-zinc-400">ID:</strong>
+            <span>{user.id}</span>
+          </div>
+          <div className="flex border-b border-zinc-800 py-2">
+            <strong className="w-32 text-zinc-400">Nombre:</strong>
+            <span>{user.firstname}</span>
+          </div>
+          <div className="flex border-b border-zinc-800 py-2">
+            <strong className="w-32 text-zinc-400">Apellido:</strong>
+            <span>{user.lastname}</span>
+          </div>
+          <div className="flex py-2">
+            <strong className="w-32 text-zinc-400">Email:</strong>
+            <span>{user.email}</span>
+          </div>
+        </div>
 
         <button 
-          className="w-full bg-gray-900 text-white py-2 mt-6 rounded"
+          className="w-full bg-red-600/80 text-white py-2 mt-8 rounded-md hover:bg-red-600 transition-colors font-semibold"
           onClick={handleLogout}
         >
           Cerrar sesión

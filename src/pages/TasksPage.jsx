@@ -143,118 +143,114 @@ export default function TasksPage() {
   if (loading) return <Loading />
 
   return (
-    <div className="w-full flex flex-col items-center mt-10">
+    <div className="w-full max-w-4xl mx-auto px-4 py-10 flex-grow flex flex-col justify-center">
+      <h2 className="text-3xl font-bold text-center mb-8 text-white">Mis Tareas</h2>
 
-      <h2 className="text-2xl font-semibold mb-6">Tareas</h2>
-
-      <div className="bg-white border shadow p-6 rounded w-96 mb-10">
-        <h3 className="text-xl font-semibold mb-4">
+      <div className="bg-zinc-900 border border-zinc-800 shadow-lg p-6 rounded-lg mb-10">
+        <h3 className="text-xl font-semibold mb-4 text-white">
           {editingId ? "Editar tarea" : "Crear tarea"}
         </h3>
 
-        <input
-          type="text"
-          name="title"
-          placeholder="Título"
-          className="border w-full p-2 mb-3"
-          value={form.title}
-          onChange={handleChange}
-        />
-
-        <textarea
-          name="description"
-          placeholder="Descripción"
-          className="border w-full p-2 mb-3"
-          value={form.description}
-          onChange={handleChange}
-        />
-
-        <label className="flex items-center gap-2 mb-3">
+        <div className="space-y-4">
           <input
-            type="checkbox"
-            name="is_completed"
-            checked={form.is_completed}
-            onChange={(e) =>
-              setForm({ ...form, is_completed: e.target.checked })
-            }
+            type="text"
+            name="title"
+            placeholder="Título de la tarea"
+            className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            value={form.title}
+            onChange={handleChange}
           />
-          Completada
-        </label>
 
-        {editingId ? (
-          <button
-            className="w-full bg-blue-700 text-white py-2 rounded"
-            onClick={updateTask}
-            disabled={saving}
-          >
-            {saving ? "Actualizando..." : "Actualizar tarea"}
-          </button>
-        ) : (
-          <button
-            className="w-full bg-gray-900 text-white py-2 rounded"
-            onClick={createTask}
-            disabled={saving}
-          >
-            {saving ? "Guardando..." : "Guardar Tarea"}
-          </button>
-        )}
+          <textarea
+            name="description"
+            placeholder="Descripción..."
+            className="w-full bg-zinc-800 border border-zinc-700 text-white p-3 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            value={form.description}
+            onChange={handleChange}
+            rows="3"
+          />
+        </div>
 
-        <button
-          className="w-full bg-gray-500 text-white py-2 rounded mt-3"
-          onClick={() => {
-            resetForm()
-            setEditingId(null)
-          }}
-        >
-          Limpiar
-        </button>
-      </div>
+        <div className="flex justify-between items-center mt-4">
+          <label className="flex items-center gap-2 text-zinc-400">
+            <input
+              type="checkbox"
+              name="is_completed"
+              className="h-4 w-4 rounded bg-zinc-700 border-zinc-600 text-indigo-600 focus:ring-indigo-500"
+              checked={form.is_completed}
+              onChange={(e) =>
+                setForm({ ...form, is_completed: e.target.checked })
+              }
+            />
+            Completada
+          </label>
 
-      <div className="w-full max-w-xl">
-        {tasks.length === 0 ? (
-          <p>No hay tareas cargadas.</p>
-        ) : (
-          <ul className="flex flex-col gap-3">
-            {tasks.map((t) => (
-              <li
-                key={t.id}
-                className={`border p-4 bg-white shadow rounded flex justify-between items-center ${
-                  t.is_completed ? "line-through opacity-70" : ""
-                }`}
+          <div className="flex gap-2">
+            {editingId && (
+              <button
+                className="bg-zinc-600 text-white py-2 px-4 rounded-md hover:bg-zinc-700 transition-colors"
+                onClick={() => {
+                  resetForm()
+                  setEditingId(null)
+                }}
               >
-                <div>
-                  <h4 className="font-semibold">{t.title}</h4>
-                  <p className="text-sm">{t.description}</p>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    className="bg-green-600 text-white px-3 py-1 rounded"
-                    onClick={() => toggleCompleted(t)}
-                  >
-                    {t.is_completed ? "Desmarcar" : "Completar"}
-                  </button>
-
-                  <button
-                    className="bg-blue-600 text-white px-3 py-1 rounded"
-                    onClick={() => startEdit(t)}
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    className="bg-red-600 text-white px-3 py-1 rounded"
-                    onClick={() => deleteTask(t.id)}
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+                Cancelar
+              </button>
+            )}
+            <button
+              className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors disabled:opacity-50"
+              onClick={editingId ? updateTask : createTask}
+              disabled={saving}
+            >
+              {saving ? (editingId ? "Actualizando..." : "Guardando...") : (editingId ? "Actualizar" : "Guardar")}
+            </button>
+          </div>
+        </div>
       </div>
 
+      <div className="space-y-4">
+        {tasks.length === 0 ? (
+          <div className="text-center py-12 px-6 bg-zinc-900/50 border border-zinc-800 rounded-lg">
+            <p className="text-zinc-400 text-lg">No tienes tareas pendientes.</p>
+            <p className="text-zinc-500">Crea una nueva para empezar.</p>
+          </div>
+        ) : (
+          tasks.map((t) => (
+            <div
+              key={t.id}
+              className={`bg-zinc-900 border border-zinc-800 p-4 rounded-lg flex justify-between items-center transition-all ${
+                t.is_completed ? "opacity-50" : "hover:border-zinc-700"
+              }`}
+            >
+              <div className={t.is_completed ? "line-through text-zinc-500" : "text-white"}>
+                <h4 className="font-semibold text-lg">{t.title}</h4>
+                <p className="text-sm text-zinc-400">{t.description}</p>
+              </div>
+
+              <div className="flex gap-2 flex-shrink-0 ml-4">
+                <button
+                  className={`p-2 rounded-md transition-colors ${t.is_completed ? "text-yellow-400 hover:bg-zinc-800" : "text-green-400 hover:bg-zinc-800"}`}
+                  onClick={() => toggleCompleted(t)}
+                >
+                  {t.is_completed ? "Pendiente" : "Completar"}
+                </button>
+                <button
+                  className="p-2 text-blue-400 rounded-md hover:bg-zinc-800 transition-colors"
+                  onClick={() => startEdit(t)}
+                >
+                  Editar
+                </button>
+                <button
+                  className="p-2 text-red-400 rounded-md hover:bg-zinc-800 transition-colors"
+                  onClick={() => deleteTask(t.id)}
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   )
 }
