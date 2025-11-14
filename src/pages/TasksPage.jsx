@@ -6,6 +6,7 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [editingId, setEditingId] = useState(null)
 
   const { form, handleChange, resetForm, setForm } = useForm({
     title: "",
@@ -34,9 +35,7 @@ export default function TasksPage() {
   }, [])
 
   const createTask = async () => {
-    if (form.title.trim() === "" || form.description.trim() === "") {
-      return
-    }
+    if (form.title.trim() === "" || form.description.trim() === "") return
 
     setSaving(true)
 
@@ -60,6 +59,45 @@ export default function TasksPage() {
     setSaving(false)
   }
 
+  const startEdit = (task) => {
+    setEditingId(task.id)
+    setForm({
+      title: task.title,
+      description: task.description,
+      is_completed: task.is_completed
+    })
+  }
+
+  const updateTask = async () => {
+    if (!editingId) return
+    if (form.title.trim() === "" || form.description.trim() === "") return
+
+    setSaving(true)
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/tasks/${editingId}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      })
+
+      if (res.ok) {
+        const updated = await res.json()
+        const newList = tasks.map((t) =>
+          t.id === editingId ? updated : t
+        )
+        setTasks(newList)
+        setEditingId(null)
+        resetForm()
+      }
+    } catch {}
+
+    setSaving(false)
+  }
+
   if (loading) return <Loading />
 
   return (
@@ -68,7 +106,9 @@ export default function TasksPage() {
       <h2 className="text-2xl font-semibold mb-6">Tareas</h2>
 
       <div className="bg-white border shadow p-6 rounded w-96 mb-10">
-        <h3 className="text-xl font-semibold mb-4">Crear o editar tarea</h3>
+        <h3 className="text-xl font-semibold mb-4">
+          {editingId ? "Editar tarea" : "Crear tarea"}
+        </h3>
 
         <input
           type="text"
@@ -99,17 +139,30 @@ export default function TasksPage() {
           Completada
         </label>
 
-        <button
-          className="w-full bg-gray-900 text-white py-2 rounded"
-          onClick={createTask}
-          disabled={saving}
-        >
-          {saving ? "Guardando..." : "Guardar Tarea"}
-        </button>
+        {editingId ? (
+          <button
+            className="w-full bg-blue-700 text-white py-2 rounded"
+            onClick={updateTask}
+            disabled={saving}
+          >
+            {saving ? "Actualizando..." : "Actualizar tarea"}
+          </button>
+        ) : (
+          <button
+            className="w-full bg-gray-900 text-white py-2 rounded"
+            onClick={createTask}
+            disabled={saving}
+          >
+            {saving ? "Guardando..." : "Guardar Tarea"}
+          </button>
+        )}
 
         <button
           className="w-full bg-gray-500 text-white py-2 rounded mt-3"
-          onClick={resetForm}
+          onClick={() => {
+            resetForm()
+            setEditingId(null)
+          }}
         >
           Limpiar
         </button>
@@ -131,7 +184,10 @@ export default function TasksPage() {
                 </div>
 
                 <div className="flex gap-2">
-                  <button className="bg-blue-600 text-white px-3 py-1 rounded">
+                  <button
+                    className="bg-blue-600 text-white px-3 py-1 rounded"
+                    onClick={() => startEdit(t)}
+                  >
                     Editar
                   </button>
                   <button className="bg-red-600 text-white px-3 py-1 rounded">
