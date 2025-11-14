@@ -18,7 +18,7 @@ export default function HomePage() {
 
         if (profileRes.ok) {
           const profileData = await profileRes.json()
-          setUser(profileData)
+          setUser(profileData.user)
         }
 
         if (tasksRes.ok) {
@@ -41,7 +41,7 @@ export default function HomePage() {
   return (
     <div className="w-full flex flex-col items-center mt-10">
       <h1 className="text-3xl font-semibold mb-6">
-        Bienvenido, {user.firstname}
+        Bienvenido, {user ? user.name : ""}
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">

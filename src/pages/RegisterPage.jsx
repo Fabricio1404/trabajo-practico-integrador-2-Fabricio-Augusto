@@ -35,6 +35,8 @@ export default function RegisterPage() {
     setLoading(true)
     setError("")
 
+    
+
     try {
       const res = await fetch("http://localhost:3000/api/register", {
         method: "POST",

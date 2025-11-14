@@ -1,68 +1,43 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Navbar from "../components/Navbar"
-import Footer from "../components/Footer"
-import PublicRoute from "./PublicRoute"
-import PrivateRoute from "./PrivateRoute"
-import LoginPage from "../pages/LoginPage"
-import RegisterPage from "../pages/RegisterPage"
-import HomePage from "../pages/HomePage"
+import { Navigate, Route, Routes } from "react-router";
+import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
 
-export default function AppRouter() {
+import HomePage from "../pages/HomePage";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
+import ProfilePage from "../pages/ProfilePage";
+import TasksPage from "../pages/TasksPage";
+
+const AppRouter = ({ authStatus, onLogin, onLogout }) => {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Navigate to={authStatus === "authenticated" ? "/home" : "/login"} />
+        }
+      />
 
-      <Routes>
-        <Route 
-          path="/login" 
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          } 
-        />
+      <Route element={<PublicRoute authStatus={authStatus} />}>
+        <Route path="/login" element={<LoginPage onLoginSuccess={onLogin} />} />
+        <Route path="/register" element={<RegisterPage onLoginSuccess={onLogin} />} />
+      </Route>
 
-        <Route 
-          path="/register" 
-          element={
-            <PublicRoute>
-              <RegisterPage />
-            </PublicRoute>
-          } 
-        />
+      <Route element={<PrivateRoute authStatus={authStatus} />}>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/profile" element={<ProfilePage onLogout={onLogout} />} />
+        <Route path="/tasks" element={<TasksPage />} />
+      </Route>
 
-        <Route 
-          path="/home" 
-          element={
-            <PrivateRoute>
-              <HomePage />
-            </PrivateRoute>
-          } 
-        />
+      <Route
+        path="*"
+        element={
+          <Navigate to={authStatus === "authenticated" ? "/home" : "/login"} />
+        }
+      />
 
-        <Route 
-          path="/tasks" 
-          element={
-            <PrivateRoute>
-              <div>Tasks</div>
-            </PrivateRoute>
-          } 
-        />
+    </Routes>
+  );
+};
 
-        <Route 
-          path="/profile" 
-          element={
-            <PrivateRoute>
-              <div>Profile</div>
-            </PrivateRoute>
-          } 
-        />
-
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-
-      <Footer />
-    </BrowserRouter>
-  )
-}
+export default AppRouter;

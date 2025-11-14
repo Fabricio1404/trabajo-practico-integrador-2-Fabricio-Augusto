@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom"
 import useForm from "../hooks/useForm"
 import Loading from "../components/Loading"
 
-export default function LoginPage() {
+export default function LoginPage({onLoginSuccess}) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -37,7 +37,7 @@ export default function LoginPage() {
         setLoading(false)
         return
       }
-
+onLoginSuccess()
       navigate("/home")
     } catch {
       setError("Error en el servidor")
