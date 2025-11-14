@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Loading from "../components/Loading"
 
-export default function ProfilePage() {
+export default function ProfilePage({ onLogout }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
@@ -15,7 +15,7 @@ export default function ProfilePage() {
         })
         if (res.ok) {
           const data = await res.json()
-          setUser(data)
+          setUser(data.user)
         } else {
           navigate("/login")
         }
@@ -31,10 +31,11 @@ export default function ProfilePage() {
     await fetch("http://localhost:3000/api/logout", {
       credentials: "include"
     })
+    onLogout();
     navigate("/login")
   }
 
-  if (loading) return <Loading />
+  if (loading || !user) return <Loading />
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-10 flex-grow flex flex-col justify-center">
@@ -48,7 +49,7 @@ export default function ProfilePage() {
           </div>
           <div className="flex border-b border-zinc-800 py-2">
             <strong className="w-32 text-zinc-400">Nombre:</strong>
-            <span>{user.firstname}</span>
+            <span>{user.name}</span>
           </div>
           <div className="flex border-b border-zinc-800 py-2">
             <strong className="w-32 text-zinc-400">Apellido:</strong>
@@ -56,7 +57,7 @@ export default function ProfilePage() {
           </div>
           <div className="flex py-2">
             <strong className="w-32 text-zinc-400">Email:</strong>
-            <span>{user.email}</span>
+            <span>{user.email || 'No disponible'}</span>
           </div>
         </div>
 

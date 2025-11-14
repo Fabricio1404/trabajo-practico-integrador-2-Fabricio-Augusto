@@ -42,7 +42,7 @@ export default function HomePage() {
     <main className="w-full max-w-6xl mx-auto px-4 py-10 flex-grow flex flex-col justify-center text-center">
       <div className="mb-12">
         <h1 className="text-4xl font-bold text-white">
-          Bienvenido, <span className="text-indigo-400">{user ? user.firstname : ""}</span>
+          Bienvenido, <span className="text-indigo-400">{user ? user.name : ""}</span>
         </h1>
         <p className="text-lg text-zinc-400 mt-2">Aquí tienes un resumen de tu actividad.</p>
       </div>
