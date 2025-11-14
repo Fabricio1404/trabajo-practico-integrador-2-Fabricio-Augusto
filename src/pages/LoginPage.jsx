@@ -1,66 +1,91 @@
-import { useEffect } from 'react';
-import { useForm } from '../hooks/useForm';
-import { useNavigate } from 'react-router';
+import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import useForm from "../hooks/useForm"
+import Loading from "../components/Loading"
 
-const LoginPage = () => {
-    const { handleChange, formValue } = useForm({
-        username: '',
-        password: ''
-    });
+export default function LoginPage() {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
-    const navigate = useNavigate();
+  const { form, handleChange } = useForm({
+    username: "",
+    password: ""
+  })
 
-    useEffect(() => {
-      console.log(formValue);
-    }, [formValue]);
+  const handleSubmit = async (e) => {
+    e.preventDefault()
 
-    const handleSubmit = async (event) => {
-      event.preventDefault();
+    if (form.username.trim() === "" || form.password.trim() === "") {
+      setError("Complete todos los campos")
+      return
+    }
 
-      console.log("estoy en submit");
-      try {
-        const res = await fetch('http://localhost:3000/api/login', {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formValue)
-        });
-        
-        if (res.ok) {
-          navigate("/home");
-        }else{
-          alert("erro es:", error.message);
-        }
+    setLoading(true)
+    setError("")
 
-      } catch (error) {
+    try {
+      const res = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form)
+      })
+
+      if (!res.ok) {
+        setError("Credenciales incorrectas")
+        setLoading(false)
+        return
       }
-    };
+
+      navigate("/home")
+    } catch {
+      setError("Error en el servidor")
+    }
+
+    setLoading(false)
+  }
+
+  if (loading) return <Loading />
 
   return (
-    <div>
-        <form onSubmit={handleSubmit}>
-            <label>Username</label>
-            <input 
-            name="username" 
-            value={formValue.username} 
-            type="text" 
-            onChange={handleChange}
-            required
-            />
-            <br/>
-            <label>Password</label>
-            <input 
-            name="password" 
-            value={formValue.password} 
-            type="password" 
-            onChange={handleChange}
-            required
-            />
-            <br/>
-            <button type="submit">Iniciar Secion</button>
-        </form>
-         
+    <div className="w-full flex justify-center mt-20">
+      <form 
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded shadow w-96 border"
+      >
+        <h2 className="text-2xl font-semibold mb-4">Iniciar sesión</h2>
+
+        {error && (
+          <p className="text-red-600 mb-3">{error}</p>
+        )}
+
+        <input 
+          type="text"
+          name="username"
+          placeholder="Usuario"
+          value={form.username}
+          onChange={handleChange}
+          className="border p-2 w-full mb-3"
+        />
+
+        <input 
+          type="password"
+          name="password"
+          placeholder="Contraseña"
+          value={form.password}
+          onChange={handleChange}
+          className="border p-2 w-full mb-3"
+        />
+
+        <button className="w-full bg-gray-900 text-white py-2 rounded">
+          Ingresar
+        </button>
+
+        <p className="mt-4 text-center text-sm">
+          ¿No tienes cuenta? <Link to="/register" className="text-blue-600">Registrate</Link>
+        </p>
+      </form>
     </div>
   )
-};
-
-export default LoginPage;
+}
