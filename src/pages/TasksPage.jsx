@@ -98,6 +98,23 @@ export default function TasksPage() {
     setSaving(false)
   }
 
+  const deleteTask = async (id) => {
+    const confirmDelete = window.confirm("¿Eliminar tarea?")
+    if (!confirmDelete) return
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+      })
+
+      if (res.ok) {
+        const newList = tasks.filter((t) => t.id !== id)
+        setTasks(newList)
+      }
+    } catch {}
+  }
+
   if (loading) return <Loading />
 
   return (
@@ -190,7 +207,11 @@ export default function TasksPage() {
                   >
                     Editar
                   </button>
-                  <button className="bg-red-600 text-white px-3 py-1 rounded">
+
+                  <button
+                    className="bg-red-600 text-white px-3 py-1 rounded"
+                    onClick={() => deleteTask(t.id)}
+                  >
                     Eliminar
                   </button>
                 </div>
