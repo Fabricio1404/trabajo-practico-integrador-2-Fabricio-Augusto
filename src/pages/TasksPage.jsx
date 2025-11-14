@@ -115,6 +115,31 @@ export default function TasksPage() {
     } catch {}
   }
 
+  const toggleCompleted = async (task) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/tasks/${task.id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          title: task.title,
+          description: task.description,
+          is_completed: !task.is_completed
+        })
+      })
+
+      if (res.ok) {
+        const updated = await res.json()
+        const newList = tasks.map((t) =>
+          t.id === task.id ? updated : t
+        )
+        setTasks(newList)
+      }
+    } catch {}
+  }
+
   if (loading) return <Loading />
 
   return (
@@ -193,7 +218,9 @@ export default function TasksPage() {
             {tasks.map((t) => (
               <li
                 key={t.id}
-                className="border p-4 bg-white shadow rounded flex justify-between items-center"
+                className={`border p-4 bg-white shadow rounded flex justify-between items-center ${
+                  t.is_completed ? "line-through opacity-70" : ""
+                }`}
               >
                 <div>
                   <h4 className="font-semibold">{t.title}</h4>
@@ -201,6 +228,13 @@ export default function TasksPage() {
                 </div>
 
                 <div className="flex gap-2">
+                  <button
+                    className="bg-green-600 text-white px-3 py-1 rounded"
+                    onClick={() => toggleCompleted(t)}
+                  >
+                    {t.is_completed ? "Desmarcar" : "Completar"}
+                  </button>
+
                   <button
                     className="bg-blue-600 text-white px-3 py-1 rounded"
                     onClick={() => startEdit(t)}
